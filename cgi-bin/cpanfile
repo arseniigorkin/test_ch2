@@ -1,0 +1,6 @@
+on 'develop' => sub {
+	requires 'perl', 5.10
+	requires 'utf8::all', 0.024
+	requires 'JSON::MaybeXS', 1
+	requires 'HTTP::Tiny', 0.080
+};

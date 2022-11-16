@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Autocomplete address fetcher</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+    <style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.error {
+    background-color: #ffedbf !important;
+    color: #850700;
+}
+    </style>
+    <script>
+    $(document).ready(function(){
+        var queryL = $("#query").val().length;
+        $( "#query" ).keyup(function() {
+            if (queryL !== $("#query").val().length && $("#query").val().length >= 3) {
+                $.ajax({
+                    beforeSend: function(){
+                        $("#query_results").html("<img src='catloading.gif'>");
+                    },
+                    url: "http://localhost/cgi-bin/acfetcher.cgi",
+                    dataType: "text",
+                    method: "GET",
+                    data: { q: $("#query").val()},
+                    success: function(result){
+                        $("#query_results").html(result);
+                    },
+                    error: function(jqXHR, textStatus){
+                        $("#query_results").html("<b>Faild</b>: "+ textStatus);
+                    },
+                    statusCode: {
+                        404: function() {
+                            $("#query_results").html( "<b>Error 404:</b> Page not found" );
+                        },
+                        500: function() {
+                            $("#query_results").html( "<b>Error 500:</b> Problem with the parser" );
+                        }
+                    }
+                });
+            }
+            queryL = $("#query").val().length;
+        });
+    });
+  </script>
+</head>
+<body>
+<form>
+    <h1 align="center">Autocomplete search</h1>
+    <br />
+    <p align="center"><b>
+        <font size="5">
+        <font color="#f57242">S</font>
+        <font color="#b0f542">e</font>
+        <font color="#42daf5">a</font>
+        <font color="#e342f5">a</font>
+        <font color="#424bf5">a</font>
+        <font color="#f5f542">a</font>
+        <font color="#a442f5">r</font>
+        <font color="#42f599">c</font>
+        <font color="#f5d142">h</font></b></font>
+        :<input id="query" type="text" size="50">
+    </p>
+</form>
+<br /><br />
+<hr />
+
+<div id="query_results" align="center">
+<!-- results will be shown here -->
+</div>
+</body>
+</html>
